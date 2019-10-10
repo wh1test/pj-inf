@@ -1,16 +1,23 @@
 pipeline {
   environment {
-    registry = "wh1test/test-1"
+    registry = "wh1test/pj-inf"
     registryCredential = 'github1-wh1test'
+	NEW_BRANCH = "pj_new"
+	SOURCE_BRANCH = "master"
+	EMAIL = "y.whitest@gmail.com"
+	NAME = "Yury Kazakevich"
   }
   agent { 
 	label 'testpg'
   }
   stages {
-    stage('Cloning Git') {
-      steps {
-        git 'https://github.com/wh1test/pj-inf.git'
-      }
+    stage('Cloning Git3') {
+		steps { 
+			sh """
+				rm -rf pj-inf
+				git clone git@github.com:wh1test/pj-inf.git
+			"""
+		}
     }
     stage('Building image') {
       steps{
