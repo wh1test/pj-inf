@@ -1,0 +1,44 @@
+---
+version: '3'
+
+services:
+  nginx_proxy:
+    image: nginx:1.17.2-alpine
+    container_name: NG
+    volumes:
+      - ./config/nginx:/etc/nginx/conf.d
+      - static:/static
+      - media:/media
+    ports:
+      - "8989:8989"
+    depends_on:
+      - web
+            
+  web:
+    build: .
+    container_name: DJ
+    command: bash -c "python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./src:/src
+      - static:/static
+      - media:/media
+    expose:
+      - "8000"
+      
+  db:
+    image: postgres:11.5-alpine
+    container_name: PGSQL
+    volumes:
+        - postgres_data:/var/lib/postgresql/data/
+    environment:
+        POSTGRES_USER: django
+        POSTGRES_PASSWORD: django
+        POSTGRES_DB: django
+        PGDATA: /var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  static:
+  media:

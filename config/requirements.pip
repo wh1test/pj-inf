@@ -1,0 +1,5 @@
+Django
+suit
+gunicorn
+psycopg2
+sqlparse
